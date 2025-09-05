@@ -21,7 +21,19 @@ git clone <your-repo-url>
 cd TimeCapsuleLLM
 ```
 
-### 2. Install Dependencies
+### 2. Create Virtual Environment
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Upgrade pip
+pip install --upgrade pip
+```
+
+### 3. Install Dependencies
 ```bash
 # Install Python dependencies
 pip install -r requirements.txt
@@ -36,7 +48,12 @@ CUDA available: True
 GPU count: 2
 ```
 
-### 3. Test Setup
+**Note:** Always activate the virtual environment before running any Python commands:
+```bash
+source venv/bin/activate
+```
+
+### 4. Test Setup
 ```bash
 # Verify everything is working
 python test_setup.py
@@ -47,7 +64,7 @@ python test_setup.py
 ✅ All tests passed! Setup is ready.
 ```
 
-### 4. Preview Data Sources (Optional)
+### 5. Preview Data Sources (Optional)
 ```bash
 # See exactly what will be downloaded
 python preview_data_sources.py
@@ -55,7 +72,7 @@ python preview_data_sources.py
 
 This shows you the complete list of 200+ historical texts that will be downloaded.
 
-### 5. Complete Multi-GPU Setup
+### 6. Complete Multi-GPU Setup
 ```bash
 # Run the complete setup optimized for 2 GPUs
 python setup_multi_gpu.py
@@ -68,7 +85,7 @@ python setup_multi_gpu.py
 - ✅ Prepares training data
 - ✅ Creates launch scripts
 
-### 6. Launch Training
+### 7. Launch Training
 ```bash
 # For Linux/Mac:
 ./launch_2gpu.sh
@@ -80,7 +97,7 @@ launch_2gpu.bat
 torchrun --standalone --nproc_per_node=2 train_london_llm_multi_gpu.py
 ```
 
-### 7. Monitor Training
+### 8. Monitor Training
 ```bash
 # Monitor GPU usage
 nvidia-smi -l 1
@@ -89,7 +106,7 @@ nvidia-smi -l 1
 tail -f out_london_historical/training.log
 ```
 
-### 8. Generate Text (After Training)
+### 9. Generate Text (After Training)
 ```bash
 # Generate historical text
 python sample_london_llm.py --prompt "In the year of our Lord 1834,"
@@ -107,20 +124,29 @@ Here's the exact sequence to run on your new machine:
 git clone <your-repo-url>
 cd TimeCapsuleLLM
 
-# 2. Install dependencies
+# 2. Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 3. Test setup
+# 4. Test setup
 python test_setup.py
 
-# 4. Complete setup
+# 5. Complete setup
 python setup_multi_gpu.py
 
-# 5. Start training
+# 6. Start training
 ./launch_2gpu.sh
 
-# 6. Generate text (after training completes)
+# 7. Generate text (after training completes)
 python sample_london_llm.py --prompt "In the year of our Lord 1834,"
+```
+
+**Important:** Always activate the virtual environment first:
+```bash
+source venv/bin/activate
 ```
 
 ## Expected Timeline
@@ -168,6 +194,32 @@ The system automatically downloads from:
 - **Vocabulary**: 50,000 tokens (optimized for historical English)
 
 ## Troubleshooting
+
+### Externally Managed Environment Error
+If you get `error: externally-managed-environment`:
+
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Then install packages
+pip install -r requirements.txt
+```
+
+**Alternative solutions:**
+```bash
+# Option 1: Use pipx (if available)
+pipx install torch torchvision torchaudio
+
+# Option 2: Override (not recommended)
+pip install -r requirements.txt --break-system-packages
+
+# Option 3: Use system packages
+sudo apt install python3-torch python3-torchvision python3-torchaudio
+```
 
 ### CUDA Not Detected
 ```bash
