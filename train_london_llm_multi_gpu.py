@@ -292,7 +292,18 @@ while True:
                     'model_args': model_args,
                     'iter_num': iter_num,
                     'best_val_loss': best_val_loss,
-                    'config': locals(),
+                    'config': {
+                        'n_layer': n_layer,
+                        'n_head': n_head,
+                        'n_embd': n_embd,
+                        'block_size': block_size,
+                        'batch_size': batch_size,
+                        'learning_rate': learning_rate,
+                        'max_iters': max_iters,
+                        'dropout': dropout,
+                        'vocab_size': meta_vocab_size,
+                        'ddp_world_size': ddp_world_size,
+                    }
                 }
                 print(f"saving checkpoint to {out_dir}")
                 torch.save(checkpoint, os.path.join(out_dir, 'ckpt.pt'))
