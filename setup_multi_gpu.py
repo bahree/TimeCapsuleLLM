@@ -85,7 +85,7 @@ def download_data():
     
     if not os.path.exists("london_data/london_corpus_merged.txt"):
         print("Downloading historical texts...")
-        result = subprocess.run([sys.executable, "data_preparation.py"])
+        result = subprocess.run([sys.executable, "data_preparation_fixed.py"])
         if result.returncode != 0:
             print("❌ Data download failed")
             return False

@@ -274,8 +274,14 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ### Data Download Fails
 ```bash
-# Run data preparation manually
-python data_preparation.py
+# Run comprehensive fix
+python fix_data_download.py
+
+# Or run data preparation manually
+python data_preparation_fixed.py
+
+# Test download first
+python test_download.py
 ```
 
 ### Training Fails
@@ -292,6 +298,21 @@ nvidia-smi
 # Reduce model size in train_london_llm_multi_gpu.py
 # Change n_layer = 12 to n_layer = 8
 # Change n_embd = 768 to n_embd = 512
+```
+
+### Download Issues
+```bash
+# Test internet connection and download
+python test_download.py
+
+# Run comprehensive fix
+python fix_data_download.py
+
+# Check if metadata file exists
+ls -la london_1800_1850_v0/metadata_london.csv
+
+# Manual download with progress
+python data_preparation_fixed.py
 ```
 
 ## Monitoring Commands
