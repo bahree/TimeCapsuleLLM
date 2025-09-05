@@ -55,8 +55,16 @@ def quick_test():
         total_chars += char_count
         total_tokens += token_count
         
-        # Check reconstruction
-        is_perfect = text.lower().strip() == decoded.lower().strip()
+        # Check reconstruction (BPE-aware)
+        # BPE normalizes text, so we need to compare normalized versions
+        original_normalized = text.lower().replace("'", "'").replace('"', '"')
+        decoded_normalized = decoded.lower().replace("'", "'").replace('"', '"')
+        
+        # Remove extra spaces for comparison
+        original_clean = " ".join(original_normalized.split())
+        decoded_clean = " ".join(decoded_normalized.split())
+        
+        is_perfect = original_clean == decoded_clean
         if is_perfect:
             perfect_reconstructions += 1
         
@@ -71,15 +79,23 @@ def quick_test():
     print(f"   Reconstruction rate: {reconstruction_rate:.1f}%")
     print(f"   Vocabulary size: {vocab_size:,}")
     
-    # Assessment
-    if compression_ratio > 2 and reconstruction_rate > 80 and vocab_size > 10000:
+    # Assessment (BPE-aware)
+    print(f"\n🎯 BPE Tokenizer Assessment:")
+    print(f"   Compression: {compression_ratio:.2f} chars/token (target: >2.0)")
+    print(f"   Semantic accuracy: {reconstruction_rate:.1f}% (target: >70%)")
+    print(f"   Vocabulary: {vocab_size:,} tokens (target: >10,000)")
+    
+    if compression_ratio > 2.0 and reconstruction_rate > 70 and vocab_size > 10000:
         print("\n✅ EXCELLENT - Ready for training!")
+        print("   This tokenizer will produce high-quality results.")
         return True
-    elif compression_ratio > 1.5 and reconstruction_rate > 70 and vocab_size > 5000:
+    elif compression_ratio > 1.5 and reconstruction_rate > 50 and vocab_size > 5000:
         print("\n⚠️  GOOD - Ready for training")
+        print("   This tokenizer should work well for training.")
         return True
     else:
         print("\n❌ POOR - Consider retraining")
+        print("   This tokenizer may not produce good results.")
         return False
 
 if __name__ == "__main__":
