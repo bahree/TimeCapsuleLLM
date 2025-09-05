@@ -60,8 +60,8 @@ device = 'cuda'
 dtype = 'bfloat16' if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else 'float16'
 compile = True
 
-# Wandb logging
-wandb_log = True  # Enable for multi-GPU training
+# Wandb logging - configurable via environment variable
+wandb_log = os.environ.get('WANDB_LOG', 'false').lower() == 'true'
 wandb_project = 'london-historical-llm-multi-gpu'
 wandb_run_name = f'london-llm-2gpu-{int(time.time())}'
 
@@ -206,10 +206,45 @@ def get_lr(it):
     coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio))
     return min_lr + coeff * (learning_rate - min_lr)
 
-# Wandb logging
+# Wandb logging - optional with user choice
 if wandb_log and master_process:
-    import wandb
-    wandb.init(project=wandb_project, name=wandb_run_name, config=locals())
+    try:
+        import wandb
+        print("🔍 W&B logging enabled. You'll need a W&B account.")
+        print("   If you don't have one, you can:")
+        print("   1. Create a free account at https://wandb.ai")
+        print("   2. Or disable W&B by setting WANDB_LOG=false")
+        print("   3. Or press Ctrl+C to cancel and restart without W&B")
+        print("")
+        
+        # Give user a chance to cancel
+        import time
+        print("Starting W&B initialization in 5 seconds... (Press Ctrl+C to cancel)")
+        time.sleep(5)
+        
+        wandb.init(project=wandb_project, name=wandb_run_name, config={
+            'n_layer': n_layer,
+            'n_head': n_head,
+            'n_embd': n_embd,
+            'block_size': block_size,
+            'batch_size': batch_size,
+            'learning_rate': learning_rate,
+            'max_iters': max_iters,
+            'dropout': dropout,
+            'vocab_size': meta_vocab_size,
+            'ddp_world_size': ddp_world_size,
+        })
+        print("✅ W&B logging initialized successfully!")
+    except ImportError:
+        print("❌ W&B not installed. Install with: pip install wandb")
+        print("   Or disable W&B by setting WANDB_LOG=false")
+        wandb_log = False
+    except Exception as e:
+        print(f"❌ W&B initialization failed: {e}")
+        print("   Disabling W&B logging...")
+        wandb_log = False
+else:
+    print("📊 W&B logging disabled - using console logging only")
 
 # Training loop
 X, Y = get_batch('train')
@@ -236,13 +271,17 @@ while True:
         print(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
         
         if wandb_log:
-            wandb.log({
-                "iter": iter_num,
-                "train/loss": losses['train'],
-                "val/loss": losses['val'],
-                "lr": lr,
-                "mfu": running_mfu*100,
-            })
+            try:
+                wandb.log({
+                    "iter": iter_num,
+                    "train/loss": losses['train'],
+                    "val/loss": losses['val'],
+                    "lr": lr,
+                    "mfu": running_mfu*100,
+                })
+            except Exception as e:
+                print(f"⚠️  W&B logging error: {e}")
+                wandb_log = False
         
         if losses['val'] < best_val_loss or always_save_checkpoint:
             best_val_loss = losses['val']
