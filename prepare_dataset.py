@@ -1,6 +1,7 @@
 """
 Dataset preparation script for London Historical LLM
 Converts the merged corpus into train.bin and val.bin files
+Uses custom historical tokenizer if available, falls back to character-level
 """
 
 import os
@@ -8,6 +9,7 @@ import pickle
 import numpy as np
 from pathlib import Path
 from tqdm import tqdm
+from tokenizers import Tokenizer
 
 def prepare_dataset():
     """Prepare dataset from merged corpus"""
@@ -43,19 +45,46 @@ def prepare_dataset():
     
     print(f"📄 Corpus size: {len(text):,} characters")
     
-    # Simple character-level tokenization (fallback)
-    print("🔤 Tokenizing text...")
-    chars = sorted(list(set(text)))
-    vocab_size = len(chars)
-    
-    # Create mappings
-    stoi = {ch: i for i, ch in enumerate(chars)}
-    itos = {i: ch for i, ch in enumerate(chars)}
-    
-    # Encode text
-    data = [stoi[c] for c in text]
-    print(f"📊 Vocabulary size: {vocab_size:,}")
-    print(f"📊 Total tokens: {len(data):,}")
+    # Try to load custom tokenizer first
+    tokenizer_path = "tokenizer_historical/tokenizer.json"
+    if os.path.exists(tokenizer_path):
+        print("🔤 Using custom historical tokenizer...")
+        tokenizer = Tokenizer.from_file(tokenizer_path)
+        vocab_size = tokenizer.get_vocab_size()
+        
+        # Encode text using custom tokenizer
+        print("🚀 Tokenizing with custom tokenizer...")
+        data = []
+        chunk_size = 10000  # Process in chunks to avoid memory issues
+        
+        for i in tqdm(range(0, len(text), chunk_size), desc="Tokenizing"):
+            chunk = text[i:i+chunk_size]
+            tokens = tokenizer.encode(chunk)
+            data.extend(tokens.ids)
+        
+        print(f"📊 Vocabulary size: {vocab_size:,}")
+        print(f"📊 Total tokens: {len(data):,}")
+        
+        # Create simple mappings for compatibility
+        stoi = {str(i): i for i in range(vocab_size)}
+        itos = {i: str(i) for i in range(vocab_size)}
+        
+    else:
+        print("🔤 Using character-level tokenization (fallback)...")
+        print("💡 For better results, run: python train_custom_tokenizer.py")
+        
+        # Simple character-level tokenization (fallback)
+        chars = sorted(list(set(text)))
+        vocab_size = len(chars)
+        
+        # Create mappings
+        stoi = {ch: i for i, ch in enumerate(chars)}
+        itos = {i: ch for i, ch in enumerate(chars)}
+        
+        # Encode text
+        data = [stoi[c] for c in text]
+        print(f"📊 Vocabulary size: {vocab_size:,}")
+        print(f"📊 Total tokens: {len(data):,}")
     
     # Split into train/val
     split_idx = int(0.9 * len(data))
