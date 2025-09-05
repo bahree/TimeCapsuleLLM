@@ -76,15 +76,29 @@ python test_setup.py
 ✅ All tests passed! Setup is ready.
 ```
 
-### 5. Preview Data Sources (Optional)
+### 5. Choose Dataset (Original or Expanded)
+```bash
+# Choose your dataset
+python setup_expanded_data.py --interactive
+
+# Or directly choose:
+python setup_expanded_data.py --dataset original    # 200+ texts, 1800-1850
+python setup_expanded_data.py --dataset expanded    # 1000+ texts, 1500-1850
+```
+
+**Dataset Options:**
+- **Original**: 200+ texts, 1800-1850, Literature only (~500MB-1GB)
+- **Expanded**: 1000+ texts, 1500-1850, All genres (~5-10GB)
+
+### 6. Preview Data Sources (Optional)
 ```bash
 # See exactly what will be downloaded
 python preview_data_sources.py
 ```
 
-This shows you the complete list of 200+ historical texts that will be downloaded.
+This shows you the complete list of historical texts that will be downloaded.
 
-### 6. Complete Multi-GPU Setup
+### 7. Complete Multi-GPU Setup
 ```bash
 # Run the complete setup optimized for 2 GPUs
 python setup_multi_gpu.py
@@ -97,7 +111,7 @@ python setup_multi_gpu.py
 - ✅ Prepares training data
 - ✅ Creates launch scripts
 
-### 7. Launch Training
+### 8. Launch Training
 ```bash
 # For Linux/Mac:
 ./launch_2gpu.sh
@@ -109,7 +123,7 @@ launch_2gpu.bat
 torchrun --standalone --nproc_per_node=2 train_london_llm_multi_gpu.py
 ```
 
-### 8. Monitor Training
+### 9. Monitor Training
 ```bash
 # Monitor GPU usage
 nvidia-smi -l 1
@@ -118,7 +132,7 @@ nvidia-smi -l 1
 tail -f out_london_historical/training.log
 ```
 
-### 9. Generate Text (After Training)
+### 10. Generate Text (After Training)
 ```bash
 # Generate historical text
 python sample_london_llm.py --prompt "In the year of our Lord 1834,"
@@ -146,13 +160,16 @@ pip install -r requirements.txt
 # 4. Test setup
 python test_setup.py
 
-# 5. Complete setup
+# 5. Choose dataset (original or expanded)
+python setup_expanded_data.py --interactive
+
+# 6. Complete setup
 python setup_multi_gpu.py
 
-# 6. Start training
+# 7. Start training
 ./launch_2gpu.sh
 
-# 7. Generate text (after training completes)
+# 8. Generate text (after training completes)
 python sample_london_llm.py --prompt "In the year of our Lord 1834,"
 ```
 
@@ -163,19 +180,28 @@ source london-llm-env/bin/activate
 
 ## Expected Timeline
 
+### Original Dataset (200+ texts)
 - **Setup**: 5-10 minutes
-- **Data Download**: 10-30 minutes (depending on internet)
+- **Data Download**: 10-30 minutes
 - **Tokenizer Training**: 5-10 minutes
 - **Model Training**: 30-60 minutes (with 2 GPUs)
 - **Total**: ~1-2 hours
 
+### Expanded Dataset (1000+ texts)
+- **Setup**: 5-10 minutes
+- **Data Download**: 1-3 hours
+- **Tokenizer Training**: 10-20 minutes
+- **Model Training**: 1-2 hours (with 2 GPUs)
+- **Total**: ~3-6 hours
+
 ## What to Expect
 
 ### During Setup
-- Downloads ~200 historical texts from Project Gutenberg
+- Downloads historical texts (200+ or 1000+ depending on dataset)
 - Creates custom tokenizer optimized for historical English
 - Prepares training data binaries
 - Shows progress for each step
+- Organizes texts by genre and century (expanded dataset)
 
 ### During Training
 - Uses both GPUs efficiently
@@ -190,11 +216,18 @@ source london-llm-env/bin/activate
 
 ## Data Sources
 
-The system automatically downloads from:
-- **Project Gutenberg**: 200+ historical texts (1500-1850)
+### Original Dataset
+- **Project Gutenberg**: 200+ historical texts (1800-1850)
 - **Authors include**: Jane Austen, Charles Dickens, Walter Scott, Mary Shelley, etc.
 - **Content**: Novels, poetry, political texts, legal documents
 - **Total size**: ~500MB-1GB of text
+
+### Expanded Dataset
+- **Multiple Sources**: Project Gutenberg, Internet Archive, HathiTrust, British Library
+- **1000+ historical texts** (1500-1850)
+- **All Genres**: Literature, politics, science, religion, history, newspapers
+- **Authors include**: Shakespeare, Milton, Austen, Dickens, Newton, Locke, etc.
+- **Total size**: ~5-10GB of text
 
 ## Model Architecture
 
@@ -307,6 +340,29 @@ TimeCapsuleLLM/
 └── ... (other files)
 ```
 
+## Dataset Management
+
+### Switching Between Datasets
+```bash
+# Interactive dataset switcher
+./switch_dataset.sh
+
+# Or programmatically
+python setup_expanded_data.py --dataset original    # Switch to original
+python setup_expanded_data.py --dataset expanded    # Switch to expanded
+```
+
+### Dataset Comparison
+```bash
+# Show detailed comparison
+python setup_expanded_data.py --compare
+```
+
+### Dataset Information
+- **Original**: Quick setup, smaller size, literature focus
+- **Expanded**: Comprehensive, larger size, all genres
+- **Switch anytime**: No need to retrain from scratch
+
 ## Advanced Usage
 
 ### Custom Training Parameters
@@ -336,6 +392,38 @@ If you encounter issues:
 2. Run `python test_setup.py` to verify setup
 3. Check GPU memory with `nvidia-smi`
 4. Review training logs in `out_london_historical/`
+
+## Quick Reference
+
+### Essential Commands
+```bash
+# Setup
+python3 -m venv london-llm-env
+source london-llm-env/bin/activate
+pip install -r requirements.txt
+
+# Choose dataset
+python setup_expanded_data.py --interactive
+
+# Train
+./launch_2gpu.sh
+
+# Generate
+python sample_london_llm.py --prompt "In the year of our Lord 1834,"
+```
+
+### File Locations
+- **Original data**: `london_data/`
+- **Expanded data**: `london_data_expanded/`
+- **Training data**: `data/london_data/`
+- **Model checkpoints**: `out_london_historical/`
+- **Generated text**: Output to terminal
+
+### Troubleshooting
+- **Externally managed environment**: Use virtual environment
+- **CUDA not detected**: Install PyTorch with CUDA
+- **Out of memory**: Reduce batch size or model size
+- **Training fails**: Check GPU memory with `nvidia-smi`
 
 ## Next Steps
 
