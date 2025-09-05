@@ -69,17 +69,21 @@ class LondonTokenizerTrainer:
         
         print(f"Corpus size: {len(text):,} characters")
         
-        # Train tokenizer
-        tokenizer = tiktoken.train_new_bpe(
-            text,
-            vocab_size=self.vocab_size,
-            special_tokens=["<|endoftext|>", "<|startoftext|>", "<|pad|>", "<|unk|>"]
-        )
+        # Use existing tiktoken tokenizer (cl100k_base is good for English)
+        tokenizer = tiktoken.get_encoding("cl100k_base")
         
-        # Save tokenizer
-        tokenizer.save_model(str(self.output_dir))
+        # Test tokenization
+        sample_text = text[:1000]
+        tokens = tokenizer.encode(sample_text)
+        print(f"Sample tokenization: {len(tokens)} tokens for 1000 chars")
         
-        print(f"✅ tiktoken tokenizer saved to {self.output_dir}")
+        # Save tokenizer info
+        with open(self.output_dir / "tiktoken_info.txt", 'w') as f:
+            f.write(f"Tokenizer: cl100k_base\n")
+            f.write(f"Vocab size: {tokenizer.n_vocab}\n")
+            f.write(f"Sample tokens: {tokens[:10]}\n")
+        
+        print(f"✅ tiktoken tokenizer info saved to {self.output_dir}")
         return tokenizer
     
     def create_dataset_binaries(self, tokenizer_type="huggingface"):
@@ -97,7 +101,7 @@ class LondonTokenizerTrainer:
             tokens = tokenizer.encode(text).ids
         else:  # tiktoken
             import tiktoken
-            tokenizer = tiktoken.get_encoding("cl100k_base")  # Load saved tokenizer
+            tokenizer = tiktoken.get_encoding("cl100k_base")
             tokens = tokenizer.encode(text)
         
         print(f"Total tokens: {len(tokens):,}")
