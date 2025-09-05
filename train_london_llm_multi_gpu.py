@@ -66,6 +66,36 @@ wandb_project = 'london-historical-llm-multi-gpu'
 wandb_run_name = f'london-llm-2gpu-{int(time.time())}'
 
 # -----------------------------------------------------------------------------
+# Checkpoint resumption logic
+# -----------------------------------------------------------------------------
+
+def find_latest_checkpoint():
+    """Find the latest checkpoint to resume from"""
+    checkpoint_path = os.path.join(out_dir, 'ckpt.pt')
+    if os.path.exists(checkpoint_path):
+        return checkpoint_path
+    return None
+
+def load_checkpoint(checkpoint_path):
+    """Load checkpoint and return training state"""
+    print(f"🔄 Resuming from checkpoint: {checkpoint_path}")
+    
+    checkpoint = torch.load(checkpoint_path, map_location='cpu')
+    
+    # Extract training state
+    iter_num = checkpoint.get('iter_num', 0)
+    best_val_loss = checkpoint.get('best_val_loss', 1e9)
+    model_args = checkpoint.get('model_args', {})
+    config = checkpoint.get('config', {})
+    
+    print(f"📊 Checkpoint info:")
+    print(f"   Iteration: {iter_num:,}")
+    print(f"   Best val loss: {best_val_loss:.4f}")
+    print(f"   Model args: {model_args}")
+    
+    return iter_num, best_val_loss, model_args, config, checkpoint
+
+# -----------------------------------------------------------------------------
 # Data loading
 # -----------------------------------------------------------------------------
 
@@ -133,6 +163,45 @@ ptdtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16, 'float16': torc
 ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=device_type, dtype=ptdtype)
 
 # -----------------------------------------------------------------------------
+# Checkpoint resumption
+# -----------------------------------------------------------------------------
+
+# Check for existing checkpoint
+checkpoint_path = find_latest_checkpoint()
+if checkpoint_path:
+    print(f"🔍 Found existing checkpoint: {checkpoint_path}")
+    print("🔄 Resuming training from checkpoint...")
+    
+    # Load checkpoint
+    iter_num, best_val_loss, model_args, config, checkpoint = load_checkpoint(checkpoint_path)
+    
+    # Update configuration from checkpoint
+    init_from = 'resume'
+    
+    # Override some settings from checkpoint
+    if 'n_layer' in model_args:
+        n_layer = model_args['n_layer']
+    if 'n_head' in model_args:
+        n_head = model_args['n_head']
+    if 'n_embd' in model_args:
+        n_embd = model_args['n_embd']
+    if 'block_size' in model_args:
+        block_size = model_args['block_size']
+    if 'dropout' in model_args:
+        dropout = model_args['dropout']
+    if 'bias' in model_args:
+        bias = model_args['bias']
+    
+    print(f"✅ Resuming from iteration {iter_num:,} with loss {best_val_loss:.4f}")
+else:
+    print("🆕 No checkpoint found, starting from scratch")
+    iter_num = 0
+    best_val_loss = 1e9
+    model_args = {}
+    config = {}
+    checkpoint = None
+
+# -----------------------------------------------------------------------------
 # Model initialization
 # -----------------------------------------------------------------------------
 
@@ -146,24 +215,37 @@ if os.path.exists(meta_path):
     print(f"found vocab_size = {meta_vocab_size} (inside {meta_path})")
 
 # Model init
-model_args = dict(n_layer=n_layer, n_head=n_head, n_embd=n_embd, block_size=block_size,
-                  bias=bias, vocab_size=None, dropout=dropout)
-
-if init_from == 'scratch':
+if init_from == 'resume':
+    print("Resuming from checkpoint")
+    gptconf = GPTConfig(**model_args)
+    model = GPT(gptconf)
+    # Load state dict
+    state_dict = checkpoint['model']
+    # Remove DDP prefix if present
+    for k in list(state_dict.keys()):
+        if k.startswith("_orig_mod."):
+            state_dict[k[len("_orig_mod."):]] = state_dict.pop(k)
+    model.load_state_dict(state_dict)
+else:
     print("Initializing a new model from scratch")
+    model_args = dict(n_layer=n_layer, n_head=n_head, n_embd=n_embd, block_size=block_size,
+                      bias=bias, vocab_size=None, dropout=dropout)
     if meta_vocab_size is None:
         print("defaulting to vocab_size of 50304")
     model_args['vocab_size'] = meta_vocab_size if meta_vocab_size is not None else 50304
     gptconf = GPTConfig(**model_args)
     model = GPT(gptconf)
-else:
-    raise ValueError(f"init_from = {init_from} not supported yet")
 
 model.to(device)
 
 # Initialize optimizer
 scaler = torch.cuda.amp.GradScaler(enabled=(dtype == 'float16'))
 optimizer = model.configure_optimizers(weight_decay, learning_rate, (beta1, beta2), device_type)
+
+# Load optimizer state if resuming
+if init_from == 'resume' and 'optimizer' in checkpoint:
+    optimizer.load_state_dict(checkpoint['optimizer'])
+    print("✅ Loaded optimizer state from checkpoint")
 
 # Compile model
 if compile:
@@ -253,11 +335,12 @@ local_iter_num = 0
 raw_model = model.module if ddp else model
 running_mfu = -1.0
 
-iter_num = 0
-best_val_loss = 1e9
+# iter_num and best_val_loss are already set from checkpoint resumption above
 
 print(f"Starting training on {ddp_world_size} GPU(s)...")
 print(f"Model parameters: {raw_model.get_num_params():,}")
+if init_from == 'resume':
+    print(f"Resuming from iteration {iter_num:,}")
 
 while True:
     # Learning rate schedule
