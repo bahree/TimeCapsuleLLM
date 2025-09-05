@@ -65,6 +65,49 @@ GPU count: 2
 source london-llm-env/bin/activate
 ```
 
+### Virtual Environment Management
+
+**After Reboot or New Terminal Session:**
+```bash
+# Navigate to project directory
+cd ~/src/TimeCapsuleLLM
+
+# Activate virtual environment
+source london-llm-env/bin/activate
+
+# Verify activation (you should see (london-llm-env) in your prompt)
+which python
+# Should show: /path/to/TimeCapsuleLLM/london-llm-env/bin/python
+
+# Check installed packages
+pip list
+```
+
+**Create Convenience Alias:**
+```bash
+# Add to your ~/.bashrc for easy activation
+echo 'alias activate-london="cd ~/src/TimeCapsuleLLM && source london-llm-env/bin/activate"' >> ~/.bashrc
+source ~/.bashrc
+
+# Then you can just run:
+activate-london
+```
+
+**Deactivate When Done:**
+```bash
+# Deactivate virtual environment
+deactivate
+```
+
+**Troubleshooting Virtual Environment:**
+```bash
+# If activation fails, recreate environment
+rm -rf london-llm-env
+python3 -m venv london-llm-env
+source london-llm-env/bin/activate
+pip install -r requirements.txt
+```
+
 ### 4. Test Setup
 ```bash
 # Verify everything is working
@@ -418,10 +461,14 @@ If you encounter issues:
 
 ### Essential Commands
 ```bash
-# Setup
+# Setup (first time)
 python3 -m venv london-llm-env
 source london-llm-env/bin/activate
 pip install -r requirements.txt
+
+# After reboot/new terminal
+cd ~/src/TimeCapsuleLLM
+source london-llm-env/bin/activate
 
 # Choose dataset
 python setup_expanded_data.py --interactive
@@ -431,6 +478,9 @@ python setup_expanded_data.py --interactive
 
 # Generate
 python sample_london_llm.py --prompt "In the year of our Lord 1834,"
+
+# Check status
+python check_training_status.py
 ```
 
 ### File Locations
