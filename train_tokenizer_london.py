@@ -7,7 +7,7 @@ import os
 import json
 from pathlib import Path
 from tokenizers import Tokenizer, models, pre_tokenizers, trainers, processors
-from tokenizers.normalizers import NFD, Lowercase, StripAccents
+from tokenizers.normalizers import NFD, Lowercase, StripAccents, Sequence
 import tiktoken
 from tqdm import tqdm
 
@@ -24,7 +24,7 @@ class LondonTokenizerTrainer:
         
         # Initialize tokenizer
         tokenizer = Tokenizer(models.BPE())
-        tokenizer.normalizer = NFD() | Lowercase() | StripAccents()
+        tokenizer.normalizer = Sequence([NFD(), Lowercase(), StripAccents()])
         tokenizer.pre_tokenizer = pre_tokenizers.Whitespace()
         
         # Configure trainer
@@ -144,11 +144,27 @@ def main():
     print("=" * 50)
     
     # Check if corpus exists
-    corpus_path = "london_data/london_corpus_merged.txt"
-    if not os.path.exists(corpus_path):
-        print(f"❌ Corpus not found at {corpus_path}")
+    # Try multiple possible corpus locations
+    possible_paths = [
+        "data/london_data/london_corpus_merged.txt",
+        "london_data/london_corpus_merged.txt",
+        "london_data/london_corpus_merged_fixed.txt"
+    ]
+    
+    corpus_path = None
+    for path in possible_paths:
+        if os.path.exists(path):
+            corpus_path = path
+            break
+    
+    if not corpus_path:
+        print(f"❌ Corpus not found in any of these locations:")
+        for path in possible_paths:
+            print(f"   - {path}")
         print("Please run data_preparation.py first to download and prepare the data.")
         return
+    
+    print(f"✅ Found corpus at: {corpus_path}")
     
     # Initialize trainer
     trainer = LondonTokenizerTrainer(corpus_path, vocab_size=50000)

@@ -225,7 +225,11 @@ class LondonDataCollector:
         """Merge all text files into a single training corpus"""
         logger.info("Creating merged corpus...")
         
-        output_path = self.output_dir / output_file
+        # Create data directory structure
+        data_dir = Path("data/london_data")
+        data_dir.mkdir(parents=True, exist_ok=True)
+        
+        output_path = data_dir / output_file
         
         # Find all text files
         text_files = list(self.output_dir.glob("*.txt"))
