@@ -23,15 +23,27 @@ cd TimeCapsuleLLM
 
 ### 2. Create Virtual Environment
 ```bash
-# Create virtual environment
-python3 -m venv venv
+# Create virtual environment (project-specific name)
+python3 -m venv london-llm-env
 
 # Activate virtual environment
-source venv/bin/activate
+source london-llm-env/bin/activate
 
 # Upgrade pip
 pip install --upgrade pip
 ```
+
+**Virtual Environment Naming:**
+- `london-llm-env` - Project-specific name (recommended)
+- `venv` - Generic name (works but less descriptive)
+- `env` - Short name (also works)
+- `london-historical-llm` - Very descriptive (longer)
+
+**Why project-specific names?**
+- Clear which project the environment belongs to
+- Avoid conflicts with other projects
+- Easier to manage multiple projects
+- Better organization
 
 ### 3. Install Dependencies
 ```bash
@@ -50,7 +62,7 @@ GPU count: 2
 
 **Note:** Always activate the virtual environment before running any Python commands:
 ```bash
-source venv/bin/activate
+source london-llm-env/bin/activate
 ```
 
 ### 4. Test Setup
@@ -125,8 +137,8 @@ git clone <your-repo-url>
 cd TimeCapsuleLLM
 
 # 2. Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv london-llm-env
+source london-llm-env/bin/activate
 
 # 3. Install dependencies
 pip install -r requirements.txt
@@ -146,7 +158,7 @@ python sample_london_llm.py --prompt "In the year of our Lord 1834,"
 
 **Important:** Always activate the virtual environment first:
 ```bash
-source venv/bin/activate
+source london-llm-env/bin/activate
 ```
 
 ## Expected Timeline
@@ -200,10 +212,10 @@ If you get `error: externally-managed-environment`:
 
 ```bash
 # Create virtual environment
-python3 -m venv venv
+python3 -m venv london-llm-env
 
 # Activate virtual environment
-source venv/bin/activate
+source london-llm-env/bin/activate
 
 # Then install packages
 pip install -r requirements.txt
