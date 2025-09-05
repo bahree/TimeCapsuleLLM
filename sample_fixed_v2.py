@@ -56,6 +56,18 @@ def load_model(checkpoint_path, device, vocab_size):
     # Load state dict
     state_dict = checkpoint['model']
     
+    # Fix _orig_mod prefixes from PyTorch compilation
+    if any(key.startswith('_orig_mod.') for key in state_dict.keys()):
+        print("   Fixing _orig_mod prefixes...")
+        new_state_dict = {}
+        for key, value in state_dict.items():
+            if key.startswith('_orig_mod.'):
+                new_key = key[10:]  # Remove '_orig_mod.' prefix
+                new_state_dict[new_key] = value
+            else:
+                new_state_dict[key] = value
+        state_dict = new_state_dict
+    
     # Handle vocabulary size mismatch
     if 'transformer.wte.weight' in state_dict:
         old_vocab_size = state_dict['transformer.wte.weight'].shape[0]
