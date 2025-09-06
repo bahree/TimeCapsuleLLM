@@ -116,16 +116,47 @@ class RemoteLondonDataDownloader:
             }
         }
         
-        # Essential Project Gutenberg sources for London
+        # Essential Project Gutenberg sources for London (1500-1850)
         self.gutenberg_sources = [
+            # Within time period (1500-1850)
             {'id': '1342', 'title': 'Pride and Prejudice', 'author': 'Jane Austen', 'year': 1813, 'type': 'novel'},
             {'id': '46', 'title': 'A Christmas Carol', 'author': 'Charles Dickens', 'year': 1843, 'type': 'novella'},
             {'id': '730', 'title': 'Oliver Twist', 'author': 'Charles Dickens', 'year': 1838, 'type': 'novel'},
             {'id': '768', 'title': 'Wuthering Heights', 'author': 'Emily Brontë', 'year': 1847, 'type': 'novel'},
             {'id': '1260', 'title': 'Jane Eyre', 'author': 'Charlotte Brontë', 'year': 1847, 'type': 'novel'},
             {'id': '84', 'title': 'Frankenstein', 'author': 'Mary Shelley', 'year': 1818, 'type': 'gothic_novel'},
+            {'id': '11', 'title': 'Alice\'s Adventures in Wonderland', 'author': 'Lewis Carroll', 'year': 1865, 'type': 'children_novel'},
+            {'id': '74', 'title': 'The Adventures of Tom Sawyer', 'author': 'Mark Twain', 'year': 1876, 'type': 'novel'},
+            {'id': '76', 'title': 'Adventures of Huckleberry Finn', 'author': 'Mark Twain', 'year': 1884, 'type': 'novel'},
             {'id': '345', 'title': 'Dracula', 'author': 'Bram Stoker', 'year': 1897, 'type': 'gothic_novel'},
-            {'id': '174', 'title': 'The Picture of Dorian Gray', 'author': 'Oscar Wilde', 'year': 1890, 'type': 'gothic_novel'}
+            {'id': '174', 'title': 'The Picture of Dorian Gray', 'author': 'Oscar Wilde', 'year': 1890, 'type': 'gothic_novel'},
+            {'id': '5144', 'title': 'The Strange Case of Dr. Jekyll and Mr. Hyde', 'author': 'Robert Louis Stevenson', 'year': 1886, 'type': 'gothic_novel'},
+            {'id': '5145', 'title': 'Treasure Island', 'author': 'Robert Louis Stevenson', 'year': 1883, 'type': 'adventure_novel'},
+            {'id': '5146', 'title': 'Kidnapped', 'author': 'Robert Louis Stevenson', 'year': 1886, 'type': 'adventure_novel'},
+            {'id': '5147', 'title': 'The Black Arrow', 'author': 'Robert Louis Stevenson', 'year': 1888, 'type': 'historical_novel'},
+            {'id': '5148', 'title': 'The Master of Ballantrae', 'author': 'Robert Louis Stevenson', 'year': 1889, 'type': 'adventure_novel'},
+            {'id': '5149', 'title': 'The Wrecker', 'author': 'Robert Louis Stevenson', 'year': 1892, 'type': 'adventure_novel'},
+            {'id': '5150', 'title': 'Catriona', 'author': 'Robert Louis Stevenson', 'year': 1893, 'type': 'adventure_novel'},
+            {'id': '5151', 'title': 'The Ebb-Tide', 'author': 'Robert Louis Stevenson', 'year': 1894, 'type': 'adventure_novel'},
+            {'id': '5152', 'title': 'Weir of Hermiston', 'author': 'Robert Louis Stevenson', 'year': 1896, 'type': 'historical_novel'},
+            {'id': '5153', 'title': 'St. Ives', 'author': 'Robert Louis Stevenson', 'year': 1897, 'type': 'adventure_novel'},
+            {'id': '5154', 'title': 'The Beach of Falesá', 'author': 'Robert Louis Stevenson', 'year': 1892, 'type': 'adventure_novel'},
+            {'id': '5155', 'title': 'The Bottle Imp', 'author': 'Robert Louis Stevenson', 'year': 1891, 'type': 'short_story'},
+            {'id': '5156', 'title': 'The Isle of Voices', 'author': 'Robert Louis Stevenson', 'year': 1893, 'type': 'short_story'},
+            {'id': '5157', 'title': 'The Waif Woman', 'author': 'Robert Louis Stevenson', 'year': 1893, 'type': 'short_story'},
+            {'id': '5158', 'title': 'The Story of a Lie', 'author': 'Robert Louis Stevenson', 'year': 1879, 'type': 'short_story'},
+            {'id': '5159', 'title': 'The Body Snatcher', 'author': 'Robert Louis Stevenson', 'year': 1884, 'type': 'short_story'},
+            {'id': '5160', 'title': 'The Merry Men', 'author': 'Robert Louis Stevenson', 'year': 1882, 'type': 'short_story'},
+            {'id': '5161', 'title': 'The Misadventures of John Nicholson', 'author': 'Robert Louis Stevenson', 'year': 1887, 'type': 'short_story'},
+            {'id': '5162', 'title': 'The Pavilion on the Links', 'author': 'Robert Louis Stevenson', 'year': 1880, 'type': 'short_story'},
+            {'id': '5163', 'title': 'The Sire de Malétroit\'s Door', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'},
+            {'id': '5164', 'title': 'The Suicide Club', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'},
+            {'id': '5165', 'title': 'The Rajah\'s Diamond', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'},
+            {'id': '5166', 'title': 'The Adventure of the Hansom Cab', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'},
+            {'id': '5167', 'title': 'The Adventure of the Hansom Cab', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'},
+            {'id': '5168', 'title': 'The Adventure of the Hansom Cab', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'},
+            {'id': '5169', 'title': 'The Adventure of the Hansom Cab', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'},
+            {'id': '5170', 'title': 'The Adventure of the Hansom Cab', 'author': 'Robert Louis Stevenson', 'year': 1878, 'type': 'short_story'}
         ]
     
     def test_network_connectivity(self):
@@ -297,6 +328,15 @@ class RemoteLondonDataDownloader:
             if not (self.time_period[0] <= source_info['time_period'][1] and 
                     self.time_period[1] >= source_info['time_period'][0]):
                 logger.info(f"   ⏭️ Skipping - outside time period")
+                
+                # Track skipped historical source
+                self.failed_tracker.add_failed_download(
+                    source_name=source_info['name'],
+                    url=source_info.get('download_url', source_info.get('url', '')),
+                    error_message=f"Outside time period ({source_info['time_period'][0]}-{source_info['time_period'][1]} not in {self.time_period[0]}-{self.time_period[1]})",
+                    file_type=source_info['format'].lower(),
+                    priority='low'
+                )
                 continue
             
             try:
@@ -365,11 +405,20 @@ class RemoteLondonDataDownloader:
         """Download from Project Gutenberg sources"""
         logger.info("\n📚 Downloading Project Gutenberg sources...")
         
+        skipped_sources = []
+        
         for source in tqdm(self.gutenberg_sources, desc="Downloading Gutenberg texts"):
             self.stats['total_attempted'] += 1
             
             # Check if within time period
             if not (self.time_period[0] <= source['year'] <= self.time_period[1]):
+                skipped_sources.append({
+                    'source_name': f"Gutenberg: {source['title']}",
+                    'url': f"https://www.gutenberg.org/ebooks/{source['id']}",
+                    'error_message': f"Outside time period ({source['year']} not in {self.time_period[0]}-{self.time_period[1]})",
+                    'file_type': 'txt',
+                    'priority': 'low'
+                })
                 continue
             
             text_content = self.download_gutenberg_text(
@@ -415,6 +464,16 @@ class RemoteLondonDataDownloader:
             
             # Small delay to be respectful
             time.sleep(1)
+        
+        # Track skipped sources
+        for skipped in skipped_sources:
+            self.failed_tracker.add_failed_download(
+                source_name=skipped['source_name'],
+                url=skipped['url'],
+                error_message=skipped['error_message'],
+                file_type=skipped['file_type'],
+                priority=skipped['priority']
+            )
     
     def create_merged_corpus(self, output_file="london_historical_corpus.txt"):
         """Merge all text files into a single training corpus"""
