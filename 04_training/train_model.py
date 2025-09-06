@@ -136,10 +136,47 @@ class LondonHistoricalTrainer:
         }
     
     def setup_accelerator(self):
-        """Setup Accelerator for multi-GPU training"""
+        """Setup Accelerator for multi-GPU training with enhanced configuration"""
         logger.info("🚀 Setting up Accelerator...")
         
-        self.accelerator = Accelerator()
+        # Check available GPUs
+        gpu_count = torch.cuda.device_count()
+        logger.info(f"🔍 Detected {gpu_count} GPU(s)")
+        
+        if gpu_count > 0:
+            for i in range(gpu_count):
+                gpu_name = torch.cuda.get_device_name(i)
+                gpu_memory = torch.cuda.get_device_properties(i).total_memory / (1024**3)
+                logger.info(f"   GPU {i}: {gpu_name} ({gpu_memory:.1f} GB)")
+        
+        # Configure accelerator based on available hardware
+        if gpu_count > 1:
+            # Multi-GPU setup
+            logger.info("🚀 Configuring for multi-GPU training...")
+            self.accelerator = Accelerator(
+                gradient_accumulation_steps=4,
+                mixed_precision="fp16" if torch.cuda.is_available() else "no",
+                log_with="wandb" if self.setup_wandb() else None,
+                project_dir=str(self.output_dir)
+            )
+        elif gpu_count == 1:
+            # Single GPU setup
+            logger.info("🚀 Configuring for single GPU training...")
+            self.accelerator = Accelerator(
+                gradient_accumulation_steps=2,
+                mixed_precision="fp16" if torch.cuda.is_available() else "no",
+                log_with="wandb" if self.setup_wandb() else None,
+                project_dir=str(self.output_dir)
+            )
+        else:
+            # CPU-only setup
+            logger.info("🚀 Configuring for CPU-only training...")
+            self.accelerator = Accelerator(
+                gradient_accumulation_steps=1,
+                mixed_precision="no",
+                log_with="wandb" if self.setup_wandb() else None,
+                project_dir=str(self.output_dir)
+            )
         
         logger.info(f"✅ Accelerator initialized")
         logger.info(f"   Device: {self.accelerator.device}")
@@ -147,6 +184,47 @@ class LondonHistoricalTrainer:
         logger.info(f"   Local process index: {self.accelerator.local_process_index}")
         logger.info(f"   Distributed: {self.accelerator.distributed_type}")
         logger.info(f"   Mixed precision: {self.accelerator.mixed_precision}")
+        logger.info(f"   GPU count: {gpu_count}")
+        
+        return True
+    
+    def setup_wandb(self):
+        """Setup WandB for experiment tracking"""
+        try:
+            import wandb
+            
+            # Check if WandB is configured
+            if not wandb.api.api_key:
+                logger.warning("⚠️ WandB API key not found. Set WANDB_API_KEY environment variable.")
+                return False
+            
+            # Initialize WandB
+            wandb.init(
+                project="london-historical-llm",
+                name=f"london-llm-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
+                config={
+                    "model_name": self.model_name,
+                    "max_length": self.max_length,
+                    "batch_size": self.batch_size,
+                    "learning_rate": self.learning_rate,
+                    "num_epochs": self.num_epochs,
+                    "vocab_size": 50000,
+                    "special_tokens": 100,
+                    "gpu_count": torch.cuda.device_count(),
+                    "mixed_precision": self.accelerator.mixed_precision if hasattr(self, 'accelerator') else "no"
+                },
+                tags=["london", "historical", "llm", "gpt2", "1500-1850"]
+            )
+            
+            logger.info("✅ WandB initialized successfully")
+            return True
+            
+        except ImportError:
+            logger.warning("⚠️ WandB not installed. Install with: pip install wandb")
+            return False
+        except Exception as e:
+            logger.warning(f"⚠️ WandB setup failed: {e}")
+            return False
     
     def load_tokenizer(self):
         """Load the custom tokenizer"""
@@ -272,7 +350,7 @@ class LondonHistoricalTrainer:
             load_best_model_at_end=True,
             metric_for_best_model="eval_loss",
             greater_is_better=False,
-            report_to="wandb" if self.accelerator.is_main_process else None,
+            report_to="wandb" if (self.accelerator.is_main_process and self.setup_wandb()) else None,
             run_name=f"london-historical-llm-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
             logging_dir=str(self.output_dir / "logs"),
             save_total_limit=5,  # Keep more checkpoints
