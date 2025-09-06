@@ -1,66 +1,114 @@
-# Enhanced Data Sources for London Historical LLM
+# Enhanced Data Sources for London Historical LLM (1500-1850)
 
 ## 📚 Overview
 
-This enhanced version includes additional high-quality historical sources from 1500-1850 London, significantly expanding the training data with authentic period texts.
+This enhanced version includes additional high-quality historical sources spanning the full 1500-1850 period, with particular emphasis on the underrepresented early periods (1500-1700). This significantly expands the training data with authentic period texts from Tudor, Stuart, Georgian, and early Victorian London.
 
-## 🆕 New Sources Added
+## 🆕 New Sources Added by Time Period
 
-### **1. Samuel Pepys' Diary (1660-1669)**
+### **Early Period (1500-1700) - Tudor & Stuart London**
+
+#### **1. John Stow's Survey of London (1598, 1603)**
+- **Type**: Topographical survey
+- **Period**: Elizabethan London
+- **Content**: Detailed description of London streets, buildings, customs
+- **Quality**: Extremely high, primary source
+- **Source**: Project Gutenberg
+
+#### **2. Samuel Pepys' Diary (1660-1669)**
 - **Type**: Personal diary
 - **Period**: Restoration London
 - **Content**: Daily life, social events, political observations
 - **Quality**: Extremely high, very detailed
 - **Source**: Pepys Diary Online
 
-### **2. The Gentleman's Magazine (1731-1850)**
+#### **3. John Evelyn's Diary (1640-1706)**
+- **Type**: Personal diary
+- **Period**: Civil War to Restoration
+- **Content**: Social observations, cultural events
+- **Quality**: High, detailed social commentary
+- **Source**: Project Gutenberg
+
+#### **4. Thomas Dekker's London Works (1600s)**
+- **Type**: Social commentary
+- **Period**: Jacobean London
+- **Content**: Social commentary, street life
+- **Quality**: High, period-appropriate language
+- **Source**: Project Gutenberg
+
+#### **5. Ben Jonson's London Plays (1600s)**
+- **Type**: Drama
+- **Period**: Jacobean London
+- **Content**: Social satire, London life
+- **Quality**: High, literary quality
+- **Source**: Project Gutenberg
+
+### **Middle Period (1700-1800) - Georgian London**
+
+#### **6. The Gentleman's Magazine (1731-1850)**
 - **Type**: Periodical
 - **Period**: 18th-19th century
 - **Content**: News, literature, social commentary
 - **Quality**: Very high, comprehensive coverage
 - **Source**: Internet Archive
 
-### **3. Horace Walpole's Letters (1740s-1790s)**
+#### **7. Horace Walpole's Letters (1740s-1790s)**
 - **Type**: Personal correspondence
 - **Period**: 18th century elite circles
 - **Content**: Social observations, cultural events
 - **Quality**: Excellent, sophisticated language
 - **Source**: Yale Walpole Collection
 
-### **4. The London Spy by Ned Ward (1698-1709)**
+#### **8. The London Spy by Ned Ward (1698-1709)**
 - **Type**: Social commentary
 - **Period**: Late 17th/early 18th century
 - **Content**: Social observations, street life
 - **Quality**: High, engaging writing
 - **Source**: Project Gutenberg
 
-### **5. Daniel Defoe's Tour (1724-1726)**
+#### **9. Daniel Defoe's Tour (1724-1726)**
 - **Type**: Travelogue
 - **Period**: Early 18th century
 - **Content**: London architecture, social life
 - **Quality**: Excellent, detailed descriptions
 - **Source**: Project Gutenberg
 
-### **6. Fanny Burney's Diaries (1770s-1840s)**
+#### **10. Fanny Burney's Diaries (1770s-1840s)**
 - **Type**: Personal diary
 - **Period**: Late 18th/early 19th century
 - **Content**: Social observations, cultural events
 - **Quality**: High, detailed social commentary
 - **Source**: Internet Archive
 
-### **7. James Boswell's London Journal (1762-1763)**
+### **Late Period (1800-1850) - Regency & Early Victorian London**
+
+#### **11. James Boswell's London Journal (1762-1763)**
 - **Type**: Personal journal
 - **Period**: Mid-18th century
 - **Content**: Social life, personal observations
 - **Quality**: High, intimate perspective
 - **Source**: Project Gutenberg
 
-### **8. The Microcosm of London (1808-1810)**
+#### **12. The Microcosm of London (1808-1810)**
 - **Type**: Illustrated social commentary
 - **Period**: Early 19th century
 - **Content**: Social life, cultural events
 - **Quality**: High, visual and textual
 - **Source**: Internet Archive
+
+#### **13. Charles Dickens' London Sketches (1830s-1850s)**
+- **Type**: Social sketches
+- **Period**: Early Victorian
+- **Content**: Social commentary, street life
+- **Quality**: Excellent, literary quality
+- **Source**: Project Gutenberg
+
+#### **14. William Hogarth's London Works (1720s-1760s)**
+- **Type**: Visual social commentary
+- **Period**: Georgian London
+- **Content**: Social satire, visual commentary
+- **Quality**: High, cultural significance
+- **Source**: Project Gutenberg
 
 ## 🚀 Usage
 

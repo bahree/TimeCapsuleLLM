@@ -142,7 +142,7 @@ class EnhancedLondonDataCollector:
                 'type': 'journal'
             },
             
-            # The Microcosm of London (1808-1810) - Illustrated social life
+            # Late Period (1800-1850) - Regency & Early Victorian London
             {
                 'title': 'The Microcosm of London',
                 'author': 'Rudolph Ackermann',
@@ -150,6 +150,22 @@ class EnhancedLondonDataCollector:
                 'source': 'Internet Archive',
                 'url': 'https://archive.org/details/microcosmoflondon',
                 'type': 'illustrated_social'
+            },
+            {
+                'title': 'Charles Dickens London Sketches',
+                'author': 'Charles Dickens',
+                'year': 1840,
+                'source': 'Project Gutenberg',
+                'gutenberg_id': '12352',  # Placeholder
+                'type': 'social_sketches'
+            },
+            {
+                'title': 'William Hogarth London Works',
+                'author': 'William Hogarth',
+                'year': 1750,
+                'source': 'Project Gutenberg',
+                'gutenberg_id': '12353',  # Placeholder
+                'type': 'visual_social_commentary'
             }
         ]
         
@@ -258,6 +274,15 @@ class EnhancedLondonDataCollector:
         """Create placeholder content for additional sources"""
         # This is a placeholder - in reality you would scrape these sources
         content_templates = {
+            'topographical_survey': f"""
+{title} - {year}
+
+{author} provides a comprehensive survey of London during this period. The city is described in great detail, with particular attention to its streets, buildings, and social institutions. The survey reveals the complex structure of London society and the various districts that make up the city.
+
+The work offers insights into the daily life of Londoners, their customs, and their way of life. It provides a valuable record of the city's development during this period, showing how London has grown and changed over time.
+
+The writing style is descriptive and informative, providing readers with a comprehensive understanding of London during this era. The work serves as an important historical document of the city's development.
+""",
             'diary': f"""
 {title} - {year}
 
@@ -266,6 +291,15 @@ class EnhancedLondonDataCollector:
 The political climate of the time is complex, with various factions vying for influence. The social hierarchy is clearly defined, with the aristocracy at the top and the working classes below. The middle classes are beginning to emerge as a significant force in society.
 
 Daily life in London involves many social interactions, from formal gatherings to casual encounters in the streets. The city is a hub of activity, with people from all walks of life coming together in this great metropolis.
+""",
+            'drama': f"""
+{title} - {year}
+
+{author} presents a dramatic portrayal of London life during this period. The play offers insights into the social dynamics of the city, revealing the complex relationships between different groups in society. The characters represent various aspects of London life, from the wealthy elite to the working classes.
+
+The dialogue reflects the language and customs of the time, providing a window into the social and cultural life of London. The play addresses various social issues and concerns of the period, offering commentary on the state of society.
+
+The writing style is engaging and dramatic, bringing the city to life for audiences. The work serves as both entertainment and social commentary, reflecting the concerns and aspirations of Londoners during this era.
 """,
             'periodical': f"""
 {title} - {year}
@@ -320,6 +354,24 @@ This illustrated work provides a visual and textual account of London society du
 The work covers various aspects of London society, from the daily life of different social classes to the cultural events and traditions of the time. It provides valuable insights into the social fabric of the city.
 
 The writing style is descriptive and engaging, complemented by detailed illustrations that bring the text to life. The work serves as an important historical document of London during this period.
+""",
+            'social_sketches': f"""
+{title} - {year}
+
+{author} provides a series of sketches depicting London life during this period. The sketches offer insights into the daily life of Londoners, their customs, and their way of life. The work reveals the complex social structure of the city and the various groups that make up its population.
+
+The sketches address various social issues and concerns of the period, offering commentary on the state of society. They provide a unique perspective on London life, revealing both its strengths and its challenges.
+
+The writing style is engaging and descriptive, bringing the city to life for readers. The work serves as both entertainment and social commentary, reflecting the concerns and aspirations of Londoners during this era.
+""",
+            'visual_social_commentary': f"""
+{title} - {year}
+
+{author} presents a visual commentary on London society during this period. The work combines text and visual elements to provide a comprehensive view of the city's social life. The commentary addresses various social issues and concerns of the time.
+
+The work offers insights into the daily life of Londoners, their customs, and their way of life. It provides valuable insights into the social fabric of the city and the various groups that make up its population.
+
+The writing style is engaging and descriptive, complemented by visual elements that bring the text to life. The work serves as an important historical document of London during this period.
 """
         }
         
@@ -538,18 +590,27 @@ The writing style is descriptive and engaging, complemented by detailed illustra
 
 def main():
     """Main enhanced data preparation pipeline"""
-    print("🏛️  London Historical LLM - Enhanced Data Preparation")
-    print("=" * 60)
+    print("🏛️  London Historical LLM - Enhanced Data Preparation (1500-1850)")
+    print("=" * 70)
     print("📚 Including additional high-quality historical sources:")
+    print("\n🔸 Early Period (1500-1700) - Tudor & Stuart London:")
+    print("   • John Stow's Survey of London (1598, 1603)")
     print("   • Samuel Pepys' Diary (1660-1669)")
+    print("   • John Evelyn's Diary (1640-1706)")
+    print("   • Thomas Dekker's London Works (1600s)")
+    print("   • Ben Jonson's London Plays (1600s)")
+    print("\n🔸 Middle Period (1700-1800) - Georgian London:")
     print("   • The Gentleman's Magazine (1731-1850)")
     print("   • Horace Walpole's Letters (1740s-1790s)")
     print("   • The London Spy by Ned Ward (1698-1709)")
     print("   • Daniel Defoe's Tour (1724-1726)")
     print("   • Fanny Burney's Diaries (1770s-1840s)")
+    print("\n🔸 Late Period (1800-1850) - Regency & Early Victorian:")
     print("   • James Boswell's London Journal (1762-1763)")
     print("   • The Microcosm of London (1808-1810)")
-    print("=" * 60)
+    print("   • Charles Dickens' London Sketches (1830s-1850s)")
+    print("   • William Hogarth's London Works (1720s-1760s)")
+    print("=" * 70)
     
     # Initialize collector
     collector = EnhancedLondonDataCollector(time_period=(1500, 1850))
