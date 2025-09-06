@@ -84,15 +84,15 @@ class LondonHistoricalTrainer:
                  data_dir: str = "data/london_historical",
                  tokenizer_dir: str = "09_models/tokenizers/london_historical_tokenizer",
                  output_dir: str = "09_models/checkpoints",
-                 model_name: str = "gpt2",
-                 max_length: int = 512,
-                 batch_size: int = 4,
-                 learning_rate: float = 5e-5,
-                 num_epochs: int = 3,
-                 warmup_steps: int = 100,
-                 save_steps: int = 500,
-                 eval_steps: int = 500,
-                 logging_steps: int = 100):
+                 model_name: str = "gpt2-medium",  # Upgraded to medium model
+                 max_length: int = 1024,  # Increased context length
+                 batch_size: int = 2,  # Reduced for larger model
+                 learning_rate: float = 3e-5,  # Optimized learning rate
+                 num_epochs: int = 5,  # Increased epochs
+                 warmup_steps: int = 500,  # Increased warmup
+                 save_steps: int = 250,  # More frequent saves
+                 eval_steps: int = 250,  # More frequent evaluation
+                 logging_steps: int = 50):  # More frequent logging
         
         self.data_dir = Path(data_dir)
         self.tokenizer_dir = Path(tokenizer_dir)
@@ -255,7 +255,7 @@ class LondonHistoricalTrainer:
         self.training_stats['total_steps'] = total_steps
         self.training_stats['total_epochs'] = self.num_epochs
         
-        # Training arguments
+        # Enhanced training arguments for historical text
         self.training_args = TrainingArguments(
             output_dir=str(self.output_dir),
             overwrite_output_dir=True,
@@ -275,27 +275,57 @@ class LondonHistoricalTrainer:
             report_to="wandb" if self.accelerator.is_main_process else None,
             run_name=f"london-historical-llm-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
             logging_dir=str(self.output_dir / "logs"),
-            save_total_limit=3,
+            save_total_limit=5,  # Keep more checkpoints
             prediction_loss_only=True,
             remove_unused_columns=False,
             dataloader_pin_memory=True,
             dataloader_num_workers=4,
             fp16=self.accelerator.mixed_precision == "fp16",
             bf16=self.accelerator.mixed_precision == "bf16",
-            gradient_accumulation_steps=1,
+            gradient_accumulation_steps=4,  # Increased for better gradient estimates
             gradient_checkpointing=True,
             optim="adamw_torch",
-            weight_decay=0.01,
+            weight_decay=0.1,  # Increased weight decay for regularization
             adam_beta1=0.9,
-            adam_beta2=0.999,
+            adam_beta2=0.95,  # Adjusted for better convergence
             adam_epsilon=1e-8,
-            max_grad_norm=1.0,
-            lr_scheduler_type="cosine",
+            max_grad_norm=0.5,  # Reduced for more stable training
+            lr_scheduler_type="cosine_with_restarts",  # Better for long training
             warmup_ratio=0.1,
             group_by_length=True,
             length_column_name="length",
             disable_tqdm=False,
-            seed=42
+            seed=42,
+            # Additional advanced settings
+            dataloader_drop_last=True,  # Drop incomplete batches
+            eval_accumulation_steps=1,  # Evaluate more frequently
+            save_safetensors=True,  # Use SafeTensors format
+            include_inputs_for_metrics=True,  # Include inputs for metrics
+            # Learning rate scheduling
+            lr_scheduler_kwargs={"num_cycles": 2},  # Cosine with restarts
+            # Early stopping
+            early_stopping_patience=3,
+            early_stopping_threshold=0.001,
+            # Memory optimization
+            dataloader_prefetch_factor=2,
+            # Mixed precision optimization
+            half_precision_backend="auto",
+            # Logging
+            log_level="info",
+            log_on_each_node=True,
+            # Distributed training
+            local_rank=-1,
+            ddp_find_unused_parameters=False,
+            ddp_bucket_cap_mb=25,
+            # Model saving
+            save_only_model=False,  # Save optimizer states too
+            ignore_data_skip=False,
+            # Evaluation
+            eval_do_sample=False,
+            eval_max_new_tokens=50,
+            # Training stability
+            skip_memory_metrics=False,
+            use_legacy_prediction_loop=False
         )
         
         logger.info(f"✅ Training arguments configured")
@@ -447,17 +477,17 @@ def main():
                        help="Directory containing tokenizer")
     parser.add_argument("--output_dir", type=str, default="09_models/checkpoints",
                        help="Directory to save trained model")
-    parser.add_argument("--model_name", type=str, default="gpt2",
-                       help="Base model name")
-    parser.add_argument("--max_length", type=int, default=512,
+    parser.add_argument("--model_name", type=str, default="gpt2-medium",
+                       help="Base model name (gpt2, gpt2-medium, gpt2-large)")
+    parser.add_argument("--max_length", type=int, default=1024,
                        help="Maximum sequence length")
-    parser.add_argument("--batch_size", type=int, default=4,
+    parser.add_argument("--batch_size", type=int, default=2,
                        help="Training batch size")
-    parser.add_argument("--learning_rate", type=float, default=5e-5,
+    parser.add_argument("--learning_rate", type=float, default=3e-5,
                        help="Learning rate")
-    parser.add_argument("--num_epochs", type=int, default=3,
+    parser.add_argument("--num_epochs", type=int, default=5,
                        help="Number of training epochs")
-    parser.add_argument("--warmup_steps", type=int, default=100,
+    parser.add_argument("--warmup_steps", type=int, default=500,
                        help="Number of warmup steps")
     
     args = parser.parse_args()

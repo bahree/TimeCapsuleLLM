@@ -44,7 +44,7 @@ class LondonTokenizerTrainer:
     def __init__(self, 
                  data_dir: str = "data/london_historical",
                  output_dir: str = "09_models/tokenizers",
-                 vocab_size: int = 32000,
+                 vocab_size: int = 50000,  # Increased from 32k to 50k
                  min_frequency: int = 2,
                  special_tokens: List[str] = None):
         
@@ -55,28 +55,55 @@ class LondonTokenizerTrainer:
         self.vocab_size = vocab_size
         self.min_frequency = min_frequency
         
-        # Special tokens for historical text
+        # Enhanced special tokens for historical text
         self.special_tokens = special_tokens or [
-            "<|endoftext|>",
-            "<|startoftext|>",
-            "<|pad|>",
-            "<|unk|>",
-            "<|mask|>",
-            "<|sep|>",
-            "<|cls|>",
-            "<|eos|>",
-            "<|bos|>",
-            "<|period|>",
-            "<|comma|>",
-            "<|question|>",
-            "<|exclamation|>",
-            "<|colon|>",
-            "<|semicolon|>",
-            "<|quotation|>",
-            "<|apostrophe|>",
-            "<|hyphen|>",
-            "<|parenthesis|>",
-            "<|bracket|>"
+            # Basic tokens
+            "<|endoftext|>", "<|startoftext|>", "<|pad|>", "<|unk|>", "<|mask|>",
+            "<|sep|>", "<|cls|>", "<|eos|>", "<|bos|>",
+            
+            # Punctuation tokens
+            "<|period|>", "<|comma|>", "<|question|>", "<|exclamation|>",
+            "<|colon|>", "<|semicolon|>", "<|quotation|>", "<|apostrophe|>",
+            "<|hyphen|>", "<|parenthesis|>", "<|bracket|>",
+            
+            # Historical language tokens
+            "<|thou|>", "<|thee|>", "<|thy|>", "<|thine|>", "<|hast|>", "<|hath|>",
+            "<|doth|>", "<|dost|>", "<|art|>", "<|wilt|>", "<|shalt|>", "<|canst|>",
+            "<|verily|>", "<|indeed|>", "<|forsooth|>", "<|methinks|>", "<|perchance|>",
+            "<|anon|>", "<|ere|>", "<|whilst|>", "<|betwixt|>", "<|amongst|>",
+            "<|prithee|>", "<|pray|>", "<|beseech|>",
+            
+            # London-specific tokens
+            "<|london|>", "<|thames|>", "<|westminster|>", "<|city|>", "<|borough|>",
+            "<|parish|>", "<|ward|>", "<|street|>", "<|lane|>", "<|court|>",
+            "<|tavern|>", "<|inn|>", "<|coffeehouse|>", "<|market|>", "<|fair|>",
+            
+            # Historical period tokens
+            "<|tudor|>", "<|stuart|>", "<|georgian|>", "<|regency|>", "<|victorian|>",
+            "<|plague|>", "<|fire|>", "<|great|>", "<|civil|>", "<|war|>",
+            
+            # Social class tokens
+            "<|noble|>", "<|gentleman|>", "<|lady|>", "<|commoner|>", "<|apprentice|>",
+            "<|servant|>", "<|merchant|>", "<|artisan|>", "<|labourer|>", "<|beggar|>",
+            
+            # Legal and court tokens
+            "<|trial|>", "<|judge|>", "<|jury|>", "<|witness|>", "<|accused|>",
+            "<|sentence|>", "<|punishment|>", "<|gaol|>", "<|transport|>", "<|hanging|>",
+            
+            # Religious tokens
+            "<|church|>", "<|parish|>", "<|clergy|>", "<|bishop|>", "<|archbishop|>",
+            "<|prayer|>", "<|sermon|>", "<|blessing|>", "<|curse|>", "<|sin|>",
+            
+            # Economic tokens
+            "<|shilling|>", "<|pound|>", "<|penny|>", "<|guinea|>", "<|crown|>",
+            "<|trade|>", "<|commerce|>", "<|merchant|>", "<|shop|>", "<|warehouse|>",
+            
+            # Time and date tokens
+            "<|morn|>", "<|noon|>", "<|eve|>", "<|night|>", "<|dawn|>", "<|dusk|>",
+            "<|monday|>", "<|tuesday|>", "<|wednesday|>", "<|thursday|>", "<|friday|>",
+            "<|saturday|>", "<|sunday|>", "<|january|>", "<|february|>", "<|march|>",
+            "<|april|>", "<|may|>", "<|june|>", "<|july|>", "<|august|>",
+            "<|september|>", "<|october|>", "<|november|>", "<|december|>"
         ]
         
         # Historical text patterns
@@ -377,7 +404,7 @@ def main():
                        help="Directory containing training data")
     parser.add_argument("--output_dir", type=str, default="09_models/tokenizers",
                        help="Directory to save tokenizer")
-    parser.add_argument("--vocab_size", type=int, default=32000,
+    parser.add_argument("--vocab_size", type=int, default=50000,
                        help="Vocabulary size for tokenizer")
     parser.add_argument("--min_frequency", type=int, default=2,
                        help="Minimum frequency for tokens")
