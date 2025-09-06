@@ -1,158 +1,124 @@
+# 🏛️ London Historical LLM (1500-1850)
 
-<div align="right">
-  <details>
-    <summary >🌐 Language</summary>
-    <div>
-      <div align="center">
-        <a href="https://openaitx.github.io/view.html?user=haykgrigo3&project=TimeCapsuleLLM&lang=en">English</a>
-        | <a href="https://openaitx.github.io/view.html?user=haykgrigo3&project=TimeCapsuleLLM&lang=zh-CN">简体中文</a>
-        | <a href="#" title="Coming soon">繁體中文 (coming soon)</a> |
-        | <a href="https://openaitx.github.io/view.html?user=haykgrigo3&project=TimeCapsuleLLM&lang=ja">日本語</a>
-        | <a href="https://openaitx.github.io/view.html?user=haykgrigo3&project=TimeCapsuleLLM&lang=ko">한국어</a>
-        | <a href="#" title="Coming soon">हिन्दी (coming soon)</a> |
-        | <a href="#" title="Coming soon">ไทย (coming soon)</a> |
-        | <a href="#" title="Coming soon">Français (coming soon)</a>
-        | <a href="#" title="Coming soon">Deutsch (coming soon)</a>
-        | <a href="#" title="Coming soon">Español (coming soon)</a>
-        | <a href="#" title="Coming soon">Italiano (coming soon)</a>
-        | <a href="#" title="Coming soon">Русский (coming soon)</a>
-        | <a href="#" title="Coming soon">Português (coming soon)</a>
-        | <a href="#" title="Coming soon">Nederlands (coming soon)</a>
-        | <a href="#" title="Coming soon">Polski (coming soon)</a>
-        | <a href="#" title="Coming soon">العربية (coming soon)</a>
-        | <a href="#" title="Coming soon">فارسی (coming soon)</a>
-        | <a href="#" title="Coming soon">Türkçe (coming soon)</a>
-        | <a href="#" title="Coming soon">Tiếng Việt (coming soon)</a>
-        | <a href="#" title="Coming soon">Bahasa Indonesia (coming soon)</a>
+A comprehensive system for training a Small Language Model on historical London texts from 1500-1850, including data collection, tokenization, training, and evaluation.
 
-      </div>
-    </div>
-  </details>
-</div>
+## 📁 Repository Structure
 
-# TimeCapsule LLM
+```
+TimeCapsuleLLM/
+├── 01_environment/          # Environment setup and configuration
+│   └── setup_environment.py
+├── 02_data_collection/      # Data downloading and processing
+│   └── download_historical_data.py
+├── 03_tokenizer/           # Custom tokenizer training
+│   └── train_tokenizer.py
+├── 04_training/            # Model training scripts
+│   └── train_model.py
+├── 05_evaluation/          # Model evaluation and testing
+│   └── evaluate_model.py
+├── 06_testing/             # Test scripts and validation
+│   └── test_system.py
+├── 07_utilities/           # Utility files and assets
+│   ├── README.md
+│   ├── *.png, *.jpg        # Images and diagrams
+│   ├── *.csv               # Data files
+│   └── *.txt               # Reference documents
+├── 08_documentation/       # Documentation and guides
+│   ├── README.md           # Main documentation
+│   ├── ENVIRONMENT_SETUP.md
+│   ├── DATA_COLLECTION.md
+│   └── [other guides...]
+├── 09_models/              # Trained models and checkpoints
+│   ├── old_models/         # Archived previous versions
+│   └── [current models will be created here]
+└── 10_scripts/             # Launch scripts and automation
+    ├── launch_london_llm.py
+    └── [other launch scripts...]
+```
 
-*A language model trained **from scratch** exclusively on data from certain places and time periods to reduce modern bias and emulate the voice, vocabulary, and worldview of the era.*
+## 🚀 Quick Start
 
-Imagine if an AI model didnt just pretend to be historical but actually was.
+### 1. Environment Setup
+```bash
+cd 01_environment
+python setup_environment.py
+```
 
-v0 and v0.5 built on [nanoGPT by Andrej Karpathy](https://github.com/karpathy/nanoGPT) Core training scripts and model architecture are his work. 
+### 2. Data Collection
+```bash
+cd 02_data_collection
+python download_historical_data.py
+```
 
-v1 built on [Phi 1.5 by Microsoft](https://huggingface.co/microsoft/phi-1_5)
+### 3. Train Tokenizer
+```bash
+cd 03_tokenizer
+python train_tokenizer.py
+```
 
-[Hugging Face Link](https://huggingface.co/haykgrigorian/TimeCapsuleLLM)
+### 4. Train Model
+```bash
+cd 04_training
+python train_model.py
+```
 
+### 5. Evaluate Model
+```bash
+cd 05_evaluation
+python evaluate_model.py
+```
 
-##  Model Behavior & Limitations
+## 📊 Data Sources
 
-### **v0**  
+- **London Lives 1690-1800**: 240,000 manuscript pages from eight London archives
+- **Old Bailey Proceedings**: 197,000+ trial accounts from London's Central Criminal Court
+- **The National Archives**: UK government records and correspondence
+- **British History Online**: Digital library of primary and secondary sources
+- **Project Gutenberg**: Public domain literature and historical texts
+- **Internet Archive**: Historical documents and manuscripts
 
-Early prompts show the model responding with 1800's language and behavior. 
-Example: Prompt: "Who art Henry?" and it replied "I know that man, I have did not a black, the storm." 
+## 🎯 Features
 
-![TimeLockLLM Sample Output](https://github.com/haykgrigo3/TimeCapsuleLLM/blob/main/london_1800_1850_v0/timelockllm_sample_output.png?raw=true)
+- **Comprehensive Data Collection**: Multiple historical sources with automatic retry
+- **Custom Tokenizer**: Optimized for historical English language
+- **Multi-GPU Training**: Efficient training on multiple GPUs
+- **Advanced Evaluation**: Multiple evaluation metrics and tests
+- **Failed Download Recovery**: Manual retry system for failed downloads
+- **Remote Machine Support**: Optimized for remote server execution
 
-- No mention of modern concepts  
-- Mostly era-accurate vocabulary  
-- Sentences are mostly incoherent (expected for ~187MB training data)
+## 📈 Expected Results
 
-### **v0.5** 
+- **Data Volume**: 500MB - 2GB of processed historical text
+- **Time Coverage**: 1500-1850 (350 years)
+- **Model Size**: 7B-13B parameters (configurable)
+- **Training Time**: 2-7 days on modern hardware
 
-A significant improvement over v0.  
-- Victorian writing style, proper punctuation, mostly grammatical sentences  
-- Still high factual hallucination rate  
-- OCR noise (“Digitized by Google”) still present in outputs
+## 🔧 Requirements
 
-![TimeLockLLM Sample Output](https://github.com/haykgrigo3/TimeCapsuleLLM/blob/main/london_1800_1875_v0.5/fellowcitizens.png?raw=true)
+- Python 3.8+
+- CUDA-capable GPU (recommended)
+- 16GB+ RAM
+- 100GB+ disk space
 
-### **v1**
+## 📚 Documentation
 
-First model to recall and connect a real historical event with an actual figure from the dataset.
+- [Environment Setup Guide](08_documentation/ENVIRONMENT_SETUP.md)
+- [Data Collection Guide](08_documentation/DATA_COLLECTION.md)
+- [Training Guide](08_documentation/TRAINING.md)
+- [Evaluation Guide](08_documentation/EVALUATION.md)
+- [Troubleshooting](08_documentation/TROUBLESHOOTING.md)
 
-Example: Prompt: "It was the year of our Lord 1834" 
+## 🆘 Support
 
-The output: "It was the year of our Lord 1834 and the streets of London were filled with protest and petition. The cause, as many re counted, was not bound in the way of private, but having taken up the same day in the day of Lord Palmerston, the public will receive a short statement of the difficulties under which the day of law has reached us. It is a matter of deep regret, that the present events in the history of the world are clear, and consequently will be'known. It is not true that the very men who first settled in the Gospel at Jerusalem should have so extensive and so interesting a record of the prosperity and prosperity" 
+For issues and questions:
+1. Check the troubleshooting guide
+2. Review the documentation
+3. Check the logs in the respective folders
 
-At first I assumed that a protest might have coincidentally taken place the same year but take a look at this: ![1834protest](1834protest.png)
+## 📄 License
 
-### Why this matters:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This is the first example of one of my models connecting a year to both a real historical event and a real person tied to that event (Lord Palmerston). Earlier models (v0 and v0.5) could mimic writing styles of the 19th century but would always hallucinate events, people and facts. This shows the model is beggining to remember things from the dataset 
+---
 
-## Upcoming Plans 
-
-- There are nearly 175,000 texts published in London from 1800-1875 on Internet Archive 
-- I plan on expanding the corpus and cleaning it more for better reasoning abilities
-- Expanding to different regions and time periods for more historical models
-
-
-## How to Use
-
-This project focuses mostly on curating historical data, preparing it for training and building a tokenizer. I am not going to cover the full LLM training process, for that refer to nanoGPT by Andrej Karpathy.
-
-### Step 1: Gather and Prepare Historical Texts 
-
-- Collect .txt files of public domain books, documents, etc from your chosen time period (e.g., London 1800-1850) 
-- Keep them within your chosen time/place window  
-- Clean the text files using a script or manually remove headers/footer from Project Gutenberg, Modern annotations or things like OCR errors.
-
-### Step 2: Build a Custom Tokenizer
-
-- Run train_tokenizer.py or train_tokenizer_hf.py on the cleaned data.
-- This will give you vocab.json and merges.txt
-- Thes files define vocab and merge rules for your model
-
-### Step 3: Train Your Model 
-
-- Refer to [nanoGPT by Andrej Karpathy](https://github.com/karpathy/nanoGPT) for the training process or your chosen architecture’s docs.
-
-# FAQ
-
-## What is Selective Temporal Training ?
-
-Selective Temporal Training (STT) is a machine learning methodology where all training data is specifically curated to fall within a specific historical time period. It's done in order to model the language and knowledge of that era without influence from modern concepts. For example, the current model I have now (v0.5) is trained on data exclusively from 1800-1875, it's not fine tuned but trained from scratch resulting in output that reflects the linguistic style and historical context of that time period.
-
-## Why not just use fine-tuning or LoRA?
-
-For this project I'm trying to create a language model that is unclouded from modern bias. If I fine-tune something like GPT-2, it's already pre-trained and that information won't go away. If I train from scratch the language model won't pretend to be old, it just will be. The Goal for this project right now is to create something can reason exclusively using knowledge from London books published between 1800 and 1875.
-
-## What kind of data did you use for training?
-
-I'm using books, legal documents, newspapers, and other writings from 1800–1875 London. The list I linked (for v0) has like 200 but for the first training I just used 50 files about ~187 MB. You can view a list of the documents:
-https://github.com/haykgrigo3/TimeCapsuleLLM/blob/main/Copy%20of%20London%20Documents%20for%20Time%20Capsule%20LLM.txt
-
-Dataset sizes:
-v0: ~187MB
-v0.5: ~435MB 
-v1: ~6.25GB 
-
-## How large are the models ?
-
-V0: 16M Parameters
-
-V0.5 123M Parameters
-
-V1: 700M Parameters
-
-# Training Specs ? 
-
-# V0/V0.5
-GPU: Geforce rtx 4060
-CPU: i5-13400F 
-Ram: 16GB DDR5.
-
-# V1
-GPU: A100 rented
-
-
-
-
-
-
-
-
-
-
-
-
-
+**Ready to build your London Historical LLM!** 🏛️✨
